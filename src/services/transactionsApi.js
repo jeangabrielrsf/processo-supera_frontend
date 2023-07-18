@@ -14,3 +14,8 @@ export async function getTransactionsByOperatorName(operatorName) {
 	const response = await api.get(`/transferencias/operador/${operatorName}`);
 	return response.data;
 }
+
+export async function getTransactionsByDateRange(initialDate, finalDate) {
+	const response = await api.get(`/transferencias/${initialDate}-${finalDate}`);
+	return response.data;
+}

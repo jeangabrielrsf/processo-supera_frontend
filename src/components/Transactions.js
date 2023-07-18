@@ -1,44 +1,105 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getTransactions } from "../services/transactionsApi";
+import {
+	getTransactions,
+	getTransactionsByDateRange,
+	getTransactionsByOperatorName,
+} from "../services/transactionsApi";
 import TransactionItem from "./TransactionItem";
 
 export default function Transactions() {
 	const [transactions, setTransactions] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [type, setType] = useState("default");
+	const [initialDate, setInitialDate] = useState("");
+	const [finalDate, setFinalDate] = useState("");
+	const [operatorName, setOperatorName] = useState("");
 
 	useEffect(() => {
-		const promise = getTransactions();
-		promise
-			.then((result) => {
-				setTransactions(result);
-				setLoading(false);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		if (type === "default") {
+			const promise = getTransactions();
+			promise
+				.then((result) => {
+					setTransactions(result);
+					setLoading(false);
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
 	}, [loading]);
+
+	async function handleInputs() {
+		console.log(initialDate);
+		console.log(finalDate);
+		console.log(operatorName);
+		if (initialDate === "" && finalDate === "" && operatorName !== "") {
+			try {
+				let newTransactions = await getTransactionsByOperatorName(operatorName);
+				setTransactions(newTransactions);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+
+		if (initialDate !== "" && finalDate !== "" && operatorName === "") {
+			try {
+				let newTransactions = await getTransactionsByDateRange(
+					initialDate,
+					finalDate
+				);
+				setTransactions(newTransactions);
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			try {
+				let newTransactions = await getTransactions();
+				setTransactions(newTransactions);
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	}
 
 	return (
 		<Wrapper>
 			<InputArea>
 				<InputBox>
 					<p>Data de início</p>
-					<input type="date" name="data-inicio" />
+					<input
+						type="date"
+						name="data-inicio"
+						id="data-inicio"
+						value={initialDate}
+						onChange={(e) => setInitialDate(e.target.value)}
+					/>
 				</InputBox>
 
 				<InputBox>
 					<p>Data de fim</p>
-					<input type="date" name="data-fim" />
+					<input
+						type="date"
+						name="data-fim"
+						id="data-fim"
+						value={finalDate}
+						onChange={(e) => setFinalDate(e.target.value)}
+					/>
 				</InputBox>
 
 				<InputBox>
 					<p>Nome do operador transacionado</p>
-					<input type="text" name="nome-operador" />
+					<input
+						type="text"
+						name="nome-operador"
+						id="nome-operador"
+						value={operatorName}
+						onChange={(e) => setOperatorName(e.target.value)}
+					/>
 				</InputBox>
 			</InputArea>
 			<Button>
-				<button>Pesquisar</button>
+				<button onClick={handleInputs}>Pesquisar</button>
 			</Button>
 
 			<TransactionsInfo>
@@ -56,13 +117,15 @@ export default function Transactions() {
 						<p>Nome do operador transacionado</p>
 					</div>
 				</Info>
-				{loading ? (
-					<p>Carregando transações...</p>
-				) : (
-					transactions.map((transaction, index) => {
-						return <TransactionItem key={index} transaction={transaction} />;
-					})
-				)}
+				<Items>
+					{loading ? (
+						<p>Carregando transações...</p>
+					) : (
+						transactions.map((transaction, index) => {
+							return <TransactionItem key={index} transaction={transaction} />;
+						})
+					)}
+				</Items>
 			</TransactionsInfo>
 		</Wrapper>
 	);
@@ -72,8 +135,8 @@ const Wrapper = styled.section`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	border: 1px solid black;
 	height: 400px;
+	margin-top: 20px;
 `;
 
 const InputBox = styled.div`
@@ -93,7 +156,6 @@ const InputArea = styled.div`
 const Button = styled.div`
 	width: 30%;
 	margin: 15px;
-	border: 1px solid red;
 	button {
 		background-color: #ff601e;
 		border: none;
@@ -108,7 +170,12 @@ const Button = styled.div`
 `;
 
 const TransactionsInfo = styled.div`
+	width: 80%;
 	border: 1px solid black;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: normal;
 `;
 
 const Info = styled.div`
@@ -124,4 +191,11 @@ const Info = styled.div`
 		justify-content: center;
 		align-items: center;
 	}
+`;
+
+const Items = styled.div`
+	border: 2px solid brown;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
 `;

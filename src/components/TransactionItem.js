@@ -15,11 +15,11 @@ export default function TransactionItem({ transaction }) {
 }
 
 const Wrapper = styled.div`
-	display: flex;
-	justify-content: space-between;
-	width: fit-content;
-	align-items: center;
 	font-size: 16px;
+	border: 1px solid gold;
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
 
 	div {
 		display: flex;
