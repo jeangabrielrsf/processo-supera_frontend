@@ -1,7 +1,12 @@
 import logo from "./logo.svg";
+import Home from "./pages/Home";
 
 function App() {
-	return <h1>MEU APP</h1>;
+	return (
+		<>
+			<Home />
+		</>
+	);
 }
 
 export default App;
