@@ -17,9 +17,9 @@ export async function getTransactionsByOperatorName(operatorName) {
 }
 
 export async function getTransactionsByDateRange(initialDate, finalDate) {
-	let initialDateConverted = dayjs(initialDate).toISOString();
+	let initialDateConverted = dayjs(initialDate).format("YYYY-MM-DD HH:mm:ssZ");
 	console.log(initialDateConverted);
-	let finalDateConverted = dayjs(finalDate).toISOString();
+	let finalDateConverted = dayjs(finalDate).format("YYYY-MM-DD HH:mm:ssZ");
 	console.log(finalDateConverted);
 	const response = await api.get(
 		`/transferencias/${initialDateConverted}/${finalDateConverted}`
