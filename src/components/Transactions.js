@@ -52,8 +52,9 @@ export default function Transactions() {
 			} catch (error) {
 				console.log(error);
 			}
-		} else {
+		} else if (initialDate === "" && finalDate === "" && operatorName === "") {
 			try {
+				console.log("situação 3");
 				let newTransactions = await getTransactions();
 				setTransactions(newTransactions);
 			} catch (error) {
@@ -194,7 +195,6 @@ const Info = styled.div`
 `;
 
 const Items = styled.div`
-	border: 2px solid brown;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;

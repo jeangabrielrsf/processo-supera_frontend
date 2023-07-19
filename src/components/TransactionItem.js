@@ -16,7 +16,7 @@ export default function TransactionItem({ transaction }) {
 
 const Wrapper = styled.div`
 	font-size: 16px;
-	border: 1px solid gold;
+	border: 1px solid #ff601e;
 	width: 100%;
 	display: flex;
 	justify-content: space-around;
