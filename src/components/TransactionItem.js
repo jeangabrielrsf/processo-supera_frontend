@@ -8,7 +8,7 @@ export default function TransactionItem({ transaction }) {
 			<div>R$ {transaction.valor}</div>
 			<div>{transaction.tipo}</div>
 			<div>
-				{transaction.nomeOperador == null ? "Null" : transaction.nameOperador}
+				{transaction.nomeoperador == null ? "Null" : transaction.nomeoperador}
 			</div>
 		</Wrapper>
 	);
